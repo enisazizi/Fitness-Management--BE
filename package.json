@@ -1,0 +1,45 @@
+{
+  "name": "fitness-management-be",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon src/server.ts",
+    "build": "tsc -p .",
+    "start": "node dist/app.js"
+  },
+  "keywords": [
+    "Socketio",
+    "client",
+    "-",
+    "server",
+    "-",
+    "device",
+    "connection",
+    "model"
+  ],
+  "author": "Enis Azizi",
+  "license": "ISC",
+  "dependencies": {
+    "@types/bcrypt": "^3.0.0",
+    "@types/express": "^4.17.9",
+    "@types/fs-extra": "^9.0.6",
+    "@types/jsonwebtoken": "^8.5.0",
+    "@types/mongoose": "^5.10.3",
+    "@types/multer": "^1.4.5",
+    "bcrypt": "^5.0.0",
+    "cloudinary": "^1.23.0",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "fs-extra": "^9.0.1",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^5.11.8",
+    "multer": "^1.4.2"
+  },
+  "devDependencies": {
+    "@types/node": "^14.14.16",
+    "nodemon": "^2.0.6",
+    "ts-node": "^9.1.1",
+    "typescript": "^4.2.3"
+  }
+}
