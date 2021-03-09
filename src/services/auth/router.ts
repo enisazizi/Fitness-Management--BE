@@ -1,12 +1,9 @@
-import  {Router } from "express"
-import controller from "./controllers"
-const handleTokens = require("../../middlewares/handleTokens")
-const {validateToken} = require("../../middlewares/validateTokens")
+import { Router } from "express";
+import controller from "./controllers";
 
-const authRouter = Router()
+const authRouter = Router();
 
-authRouter.post("/login",login)
-authRouter.get("/logout",validateToken,logout)
+authRouter.post('/login',controller.login)
+authRouter.get('/logout',controller.logout)
 
-
-export = authRouter
+export default authRouter

@@ -11,10 +11,10 @@ const companySchema = new Schema({
   name: { type: String, required: true },
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
+  username: { type: String, required: true },
   image: String,
   business_id: { type: String, required: true },
   license_id: { type: String, required: true },
-  refreshTokens: [{ token: String }],
 });
 
 companySchema.pre<CompanyDoc>("save", async function (next) {

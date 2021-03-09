@@ -1,4 +1,2 @@
-module.exports = {
-    companyRoute : require("./router"),
-    CommentSchema : require("./schema")
-}
+import router from "./router";
+export default router;

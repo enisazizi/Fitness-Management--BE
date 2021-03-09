@@ -1,5 +1,6 @@
 import { companyModel } from "./schema";
-import { Request, Response, NextFunction } from "express";
+import { Response, NextFunction } from "express";
+import {authReq as Request} from '../../types/general'
 
 const newCompany = async (req: Request, res: Response, nex: NextFunction) => {
     try {

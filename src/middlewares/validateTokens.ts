@@ -1,34 +1,34 @@
 const { verifyJWT } = require("../utils/auth/jwt");
 import {Request,Response,NextFunction} from "express"
+import {authReq} from '../types/general'
 import {companyModel} from "../services/company/schema"
-const validateToken = async (req:Request, res:Response, next:NextFunction) => {
+import {errorMessage} from '../types/errors'
+
+
+
+
+
+
+
+const validateToken = async (req:authReq, res:Response, next:NextFunction) => {
 	try {
 		let token = req.cookies.token;
 
 		const decoded = await verifyJWT(token);
 
-		const user = await companyModel.findOne({
+		const company = await companyModel.findOne({
 			_id: decoded._id,
-		})
-			.populate({
-				path: "followers",
-				select: "-refreshTokens -__v -password",
-			})
-			.populate({
-				path: "following",
-				select: "-refreshTokens -__v -password",
-			});
-
-		if (!user) {
+		}).select({password:0,__v:0})
+		if (!company) {
 			throw new Error( "Unauthorized");
 		}
 
 		req.token = token;
-		req.user = user;
+		req.company = company;
 
 		next();
 	} catch (e) {
-		next(new Error( "Unauthorized"));
+		next(new errorMessage( "Unauthorized",401));
 	}
 };
 

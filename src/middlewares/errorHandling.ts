@@ -1,4 +1,5 @@
-const badRequestHandler = (err, req, res, next) => {
+import {Request,Response,NextFunction, ErrorRequestHandler} from "express"
+const badRequestHandler = (err:any, req:Request, res:Response, next:NextFunction) => {
 	if (err.httpStatusCode === 400) {
 		res.status(400).json({
 			success: false,
@@ -8,7 +9,7 @@ const badRequestHandler = (err, req, res, next) => {
 	next(err);
 };
 
-const forbiddenError = (err, req, res, next) => {
+const forbiddenError = (err:any, req:Request, res:Response, next:NextFunction) => {
 	if (err.httpStatusCode === 403) {
 		res.status(400).json({
 			success: false,
@@ -18,7 +19,7 @@ const forbiddenError = (err, req, res, next) => {
 	next(err);
 };
 
-const notFoundHandler = (err, req, res, next) => {
+const notFoundHandler = (err:any, req:Request, res:Response, next:NextFunction) => {
 	if (err.httpStatusCode === 404) {
 		res.status(404).json({
 			success: false,
@@ -28,7 +29,7 @@ const notFoundHandler = (err, req, res, next) => {
 	next(err);
 };
 
-const unauthorizedError = (err, req, res, next) => {
+const unauthorizedError = (err:any, req:Request, res:Response, next:NextFunction) => {
 	if (err.httpStatusCode === 401) {
 		res.status(401).json({
 			success: false,
@@ -38,7 +39,7 @@ const unauthorizedError = (err, req, res, next) => {
 	next(err);
 };
 
-const genericErrorHandler = (err, req, res, next) => {
+const genericErrorHandler =(err:any, req:Request, res:Response, next:NextFunction) => {
 	if (!res.headersSent) {
 		res.status(err.httpStatusCode || 500).json({
 			success: false,
@@ -47,10 +48,10 @@ const genericErrorHandler = (err, req, res, next) => {
 	}
 };
 
-module.exports = (server) => {
-	server.use(badRequestHandler);
-	server.use(notFoundHandler);
-	server.use(forbiddenError);
-	server.use(unauthorizedError);
-	server.use(genericErrorHandler);
+module.exports = (app: any) => {
+	app.use(badRequestHandler);
+	app.use(notFoundHandler);
+	app.use(forbiddenError);
+	app.use(unauthorizedError);
+	app.use(genericErrorHandler);
 };
