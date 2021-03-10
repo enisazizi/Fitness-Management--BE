@@ -1,7 +1,14 @@
 import jwt from 'jsonwebtoken'
+import {DecodedVerifyOpt} from "../../types/general"
 import {companyModel} from "../../services/company/schema"
 import {CompanyDoc} from "../../types/company"
-const { JWT_REFRESH_SECRET, JWT_SECRET } = process.env;
+const { JWT_SECRET } = process.env;
+
+interface dec {
+	_id:string;
+	exp:string;
+	iat:number;
+}
 
 const generateToken = (id:string):string | undefined => {
 	try {
@@ -12,7 +19,8 @@ const generateToken = (id:string):string | undefined => {
 		throw new Error(error);
 	}
 };
-const verifyJWT = (token:string):Promise<jwt.VerifyErrors | jwt.DecodeOptions> =>
+
+const verifyJWT = (token:string):Promise<dec|any> =>
 	new Promise((res, rej) => {
 		jwt.verify(token, JWT_SECRET!, (err, decoded) => {
 			if (err) rej(err);
@@ -21,4 +29,6 @@ const verifyJWT = (token:string):Promise<jwt.VerifyErrors | jwt.DecodeOptions> =
 	});
 
 
-export default{ generateToken, verifyJWT}
+
+
+export default{ generateToken, verifyJWT,}

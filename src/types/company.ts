@@ -31,4 +31,5 @@ export interface CompanyModel extends CompanyDocument {
     id: string,
     status: boolean
   ): Promise<CompanyDoc | undefined>;
+  
 }
