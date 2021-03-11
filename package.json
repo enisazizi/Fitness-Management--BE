@@ -29,14 +29,15 @@
     "@types/mongoose": "^5.10.3",
     "@types/multer": "^1.4.5",
     "bcrypt": "^5.0.0",
-    "cloudinary": "^1.23.0",
+    "cloudinary": "^1.25.0",
     "cookie-parser": "^1.4.5",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "fs-extra": "^9.0.1",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.11.8",
-    "multer": "^1.4.2"
+    "multer": "^1.4.2",
+    "multer-storage-cloudinary": "^4.0.0"
   },
   "devDependencies": {
     "@types/node": "^14.14.16",
