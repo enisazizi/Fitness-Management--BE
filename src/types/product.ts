@@ -5,6 +5,7 @@ export interface Product {
     description:string;
     brand:string;
     image:string;
+    price:number;
 }
 
 export interface ProductDoc extends Document{
@@ -13,6 +14,7 @@ export interface ProductDoc extends Document{
     description:string;
     brand:string;
     image:string;
+    price:number;
 }
 
 export type ProductDocument = Model<ProductDoc> 

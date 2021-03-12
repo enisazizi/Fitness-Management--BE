@@ -98,7 +98,7 @@ const removeProductFromClientCart = async(req:Request,res:Response,next:NextFunc
 
         const product = await productModel.findById(productId)
         if(product){
-            const newProduct = {...product.toObject(),quantity:req.body.quantity}
+      
             
            
             const isProductThere = await clientModel.findProductInCart(
@@ -120,18 +120,14 @@ const removeProductFromClientCart = async(req:Request,res:Response,next:NextFunc
                         let client = await clientModel.findOne({_id:req.params.clientId})
                         if(client !==undefined && client !==null){
                          
-                            client.cart= client?.cart.filter(
-                                (prod:any)=> prod.product.toString() !==req.params.productId.toString()
-                            )
-                 
-                            await client.save()
-                            res.status(204).send("Deleted me temen")
+                            await clientModel.removeFromCart(req.params.clientId, correctProduct);
+                            res.send(" Product deleted from cart");
                         }else{
                             throw new Error("Client is undefined")
                         }
                       
-                       await client?.save()
-                       res.status(204).send(client)
+                    //    await client?.save()
+                    //    res.status(204).send(client)
                       }
                       
                     
@@ -143,6 +139,15 @@ const removeProductFromClientCart = async(req:Request,res:Response,next:NextFunc
         next(error)
     }
 }
+const cartTotal = async(req:Request,res:Response,next:NextFunction)=>{
+    try{
+        const total = await clientModel.calculateCartTotal(req.params.id)
+        res.send({total})
+        
+    }catch(error){
+        next(error)
+    }
+}
 export default {
     newClient,
     getClients,
@@ -151,4 +156,5 @@ export default {
     deleteClient,
     addProductToClientCart,
     removeProductFromClientCart,
+    cartTotal,
   };

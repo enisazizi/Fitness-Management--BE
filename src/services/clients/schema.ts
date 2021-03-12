@@ -4,6 +4,7 @@ import {
     ClientDoc,
     ClientDocument,
     ClientModel,
+    
 } from "../../types/client"
 import bcrypt from "bcrypt"
 
@@ -16,7 +17,7 @@ const clientSchema = new Schema ({
   cart: [
     {
       total: Number,
-      product: { type: Schema.Types.ObjectId, ref: "Products" },
+      product: { type: Schema.Types.ObjectId, ref: "Product" },
 
       quantity: {type:Number,default:1},
 
@@ -26,36 +27,36 @@ const clientSchema = new Schema ({
   products:String,
 })
 
-// clientSchema.pre<ClientDoc>("save",async function (next){
-//     if(this.password != undefined){
-//         const validation = await clientModel.findOne({email:this.email})
+clientSchema.pre<ClientDoc>("save",async function (next){
+    if(this.password != undefined){
+        const validation = await clientModel.findOne({email:this.email})
 
-//         if (!validation) {
-//             const checkPw = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\s).*$/; //Check if pw has a number,lowercase and uppercase
-//             const validPw = this.password.match(checkPw);
-//             console.log(validPw);
+        if (!validation) {
+            const checkPw = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\s).*$/; //Check if pw has a number,lowercase and uppercase
+            const validPw = this.password.match(checkPw);
+            console.log(validPw);
       
-//             if (validPw) {
-//               const encryptedPassword = await bcrypt.hash(this.password, 8);
-//               this.password = encryptedPassword;
-//               this.email = this.email.toLowerCase();
-//               next();
-//             } else {
-//               const err = new Error();
-//               err.message = "THE PASSWORD YOU PROVIDED IS NOT A SAFE PASSWORD";
-//               next(err);
-//             }
-//           } else {
-//             const err = new Error();
-//             err.message = "EMAIL ALREADY EXISTS";
-//             next(err);
-//           }
-//         } else {
-//           const err = new Error();
-//           err.message = "PASSWORD MUST HAVE MORE THAN 8 CHARACTERS";
-//           next(err);
-//     }
-// })
+            if (validPw) {
+              const encryptedPassword = await bcrypt.hash(this.password, 8);
+              this.password = encryptedPassword;
+              this.email = this.email.toLowerCase();
+              next();
+            } else {
+              const err = new Error();
+              err.message = "THE PASSWORD YOU PROVIDED IS NOT A SAFE PASSWORD";
+              next(err);
+            }
+          } else {
+            const err = new Error();
+            err.message = "EMAIL ALREADY EXISTS";
+            next(err);
+          }
+        } else {
+          const err = new Error();
+          err.message = "PASSWORD MUST HAVE MORE THAN 8 CHARACTERS";
+          next(err);
+    }
+})
 clientSchema.static("findProductInCart",async function(id,productId){
    
     const isProduct = await clientModel.findOne({
@@ -79,12 +80,34 @@ clientSchema.static("incrementCartQuantity",
     }
 )
 
-clientSchema.static("addProductToCart",async function(id,product){
+clientSchema.static("addProductToCart",async function(id:string,product){
   
     await clientModel.findOneAndUpdate(
         {_id:id},
        { $addToSet:{cart:{product:product}}},
     )
+})
+clientSchema.static("removeFromCart",async function(id:string,product){
+  console.log(product.product)
+    await clientModel.findOneAndUpdate(
+        {_id:id},
+       { $pull:{cart:{product:product.product}}},
+    )
+})
+clientSchema.static("calculateCartTotal",async function (id:string) {
+
+    const whatever = await clientModel.findById(id).populate([{
+        path:"cart.product"
+    }])
+        if(whatever){
+            console.log(whatever,"-----")
+          const total =  whatever.cart.map(product => parseInt(product.quantity) * parseInt(product.product.price) )
+        .reduce((acc, el) => acc + el, 0)
+        console.log(total)
+          return whatever
+        }
+        
+    
 })
 clientSchema.statics.findByCred = async function (
     this:ClientDocument,

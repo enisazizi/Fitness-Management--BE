@@ -50,14 +50,5 @@ export interface ClientModel extends ClientDocument{
         product:any,
         quantity:number
     ):any
-    calculateCartTotal(
-        _id:string,
-      
-    ):any
-    removeFromCart(
-        this:ClientDocument,
-        _id:string,
-        product:any
-    ):any
 
 }

@@ -10,5 +10,6 @@ clientRouter.put("/:id",validateToken,controller.editClient)
 clientRouter.delete("/:id",validateToken,controller.deleteClient)
 clientRouter.post("/:productId/:clientId",validateToken,controller.addProductToClientCart)
 clientRouter.delete("/:productId/:clientId",validateToken,controller.removeProductFromClientCart)
+clientRouter.get("/:id/total",validateToken,controller.cartTotal)
 
 export = clientRouter
