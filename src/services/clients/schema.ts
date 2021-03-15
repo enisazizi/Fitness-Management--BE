@@ -64,6 +64,7 @@ clientSchema.static("findProductInCart",async function(id,productId){
         "cart.product":productId,
         
     })
+    console.log("Isproduct func is returning :",isProduct)
     return isProduct
 })
 clientSchema.static("incrementCartQuantity",
@@ -76,7 +77,7 @@ clientSchema.static("incrementCartQuantity",
             },
             {$inc:{"cart.$.quantity":quantity}}
         )
-        console.log("qitu duhet me hi",product)
+        // console.log("qitu duhet me hi",product)
     }
 )
 

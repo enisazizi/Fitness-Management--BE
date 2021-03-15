@@ -38,18 +38,18 @@ export interface ClientModel extends ClientDocument{
         this:ClientDocument,
         _id:string,
         product:any
-    ):any;
+    ):ClientDoc
     addProductToCart(
         this:ClientDocument,
         _id:string,
         product:any
-    ):any
+    ):void
     incrementCartQuantity(
         this:ClientDocument,
         _id:string,
         product:any,
         quantity:number
-    ):any
+    ):void
     calculateCartTotal(
         _id:string,
       
@@ -58,6 +58,6 @@ export interface ClientModel extends ClientDocument{
         this:ClientDocument,
         _id:string,
         product:any
-    ):any
+    ):void
 
 }

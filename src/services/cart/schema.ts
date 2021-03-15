@@ -1,16 +1,16 @@
-import {Schema,model} from "mongoose"
-// import {
-//     Client,
-//     ClientDoc,
-//     ClientDocument,
-//     ClientModel,
-// } from "../../types/client"
-import bcrypt from "bcrypt"
+// import {Schema,model} from "mongoose"
+// // import {
+// //     Client,
+// //     ClientDoc,
+// //     ClientDocument,
+// //     ClientModel,
+// // } from "../../types/client"
+// import bcrypt from "bcrypt"
 
-const clientSchema = new Schema ({
+// const clientSchema = new Schema ({
 
-    cart: [{ type: Schema.Types.ObjectId, ref: "Product" }],
-})
+//     cart: [{ type: Schema.Types.ObjectId, ref: "Product" }],
+// })
 
 // clientSchema.pre<ClientDoc>("save",async function (next){
 //     if(this.password != undefined){
@@ -42,78 +42,78 @@ const clientSchema = new Schema ({
 //           next(err);
 //     }
 // })
-clientSchema.static("findProductInCart",async function(id,productId){
+// clientSchema.static("findProductInCart",async function(id,productId){
    
-    const isProduct = await clientModel.findOne({
-        _id:id,
-        "cart.product":productId,
+//     const isProduct = await clientModel.findOne({
+//         _id:id,
+//         "cart.product":productId,
         
-    })
-    return isProduct
-})
-clientSchema.static("incrementCartQuantity",
-    async function (id,productdId,quantity){
-        console.log(quantity)
-     const product= await clientModel.findOneAndUpdate(
-            {
-                _id:id,
-                "cart.product":productdId,
-            },
-            {$inc:{"cart.$.quantity":quantity}}
-        )
-        console.log("qitu duhet me hi",product)
-    }
-)
+//     })
+//     return isProduct
+// })
+// clientSchema.static("incrementCartQuantity",
+//     async function (id,productdId,quantity){
+//         console.log(quantity)
+//      const product= await clientModel.findOneAndUpdate(
+//             {
+//                 _id:id,
+//                 "cart.product":productdId,
+//             },
+//             {$inc:{"cart.$.quantity":quantity}}
+//         )
+//         console.log("qitu duhet me hi",product)
+//     }
+// )
 
-clientSchema.static("addProductToCart",async function(id,product){
+// clientSchema.static("addProductToCart",async function(id,product){
   
-    await clientModel.findOneAndUpdate(
-        {_id:id},
-       { $addToSet:{cart:{product:product}}},
-    )
-})
-clientSchema.statics.findByCred = async function (
-    this:ClientDocument,
-    username:string,
-    password:string
-){
-    try {
-        let Client = await this.findOne({username})
-        if(!Client?.password) throw new Error("Client not found !")
+//     await clientModel.findOneAndUpdate(
+//         {_id:id},
+//        { $addToSet:{cart:{product:product}}},
+//     )
+// })
+// clientSchema.statics.findByCred = async function (
+//     this:ClientDocument,
+//     username:string,
+//     password:string
+// ){
+//     try {
+//         let Client = await this.findOne({username})
+//         if(!Client?.password) throw new Error("Client not found !")
 
-        const doesMatch = await bcrypt.compare(password,Client.password)
-        if(!doesMatch){
-            const err = new Error()
-            err.message = "Unable to Login,check Crendetials"
-            throw err
-        }else{
-            const {
-                name,
-                password,
-                username,
-                email,
-                _id,
-                image,
-            }=Client
-            return Object.freeze({
-                name,
-                username,
-                email,
-                _id,
-                image,
-            })
-        }
+//         const doesMatch = await bcrypt.compare(password,Client.password)
+//         if(!doesMatch){
+//             const err = new Error()
+//             err.message = "Unable to Login,check Crendetials"
+//             throw err
+//         }else{
+//             const {
+//                 name,
+//                 password,
+//                 username,
+//                 email,
+//                 _id,
+//                 image,
+//             }=Client
+//             return Object.freeze({
+//                 name,
+//                 username,
+//                 email,
+//                 _id,
+//                 image,
+//             })
+//         }
 
 
         
-    } catch (error) {
-        error.mesage="Exception while finding client"
-        throw error;
+//     } catch (error) {
+//         error.mesage="Exception while finding client"
+//         throw error;
         
-    }
-}
+//     }
+// }
 
-export const clientModel = model<ClientDoc,ClientModel>(
-    "Client",
-    clientSchema
-)
+// export const clientModel = model<ClientDoc,ClientModel>(
+//     "Client",
+//     clientSchema
+// )
