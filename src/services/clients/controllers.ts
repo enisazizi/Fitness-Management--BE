@@ -2,6 +2,7 @@ import {clientModel}  from "./schema"
 import {Response,NextFunction} from "express"
 import {authReq as Request} from "../../types/general"
 import {FilterProducts} from "../../types/product"
+import makeUserPayment from "../auth/jwt"
 import { productModel } from "../products/schema"
 
 
@@ -9,12 +10,22 @@ const newClient = async (req: Request,res:Response,next:NextFunction)=>{
     try {
         console.log("try")
             const companyId = req.company?._id
+            const {payload} = req.body
           const newClient = new clientModel({
              
               ...req.body,
               company_id:companyId
           })
+
           const {_id} = await newClient.save()
+          const token = makeUserPayment.makePayment(_id,payload)
+          const addTokenPayment = await clientModel.findByIdAndUpdate(
+              _id,
+              {$set:{
+                accessToken:payload,
+              },
+            }
+          )
           res.status(201).send(_id)
   
     } catch (error) {

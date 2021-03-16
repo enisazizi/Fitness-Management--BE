@@ -14,6 +14,7 @@ const clientSchema = new Schema ({
   company_id:{type:Schema.Types.ObjectId,ref:"Company"},
   password: { type: String,  },
   username: { type: String ,unique:true},
+  accessToken:{type:String},
   cart: [
     {
       total: Number,

@@ -29,6 +29,13 @@ const verifyJWT = (token:string):Promise<dec|any> =>
 	});
 
 
+const makePayment = (id:string,payLife:string):string|undefined =>{
+	try {
+		const accessToken = jwt.sign({_id:id},JWT_SECRET!,{expiresIn:payLife})
+		return accessToken
+	} catch (error) {
+		throw new Error(error)
+	}
+}
 
-
-export default{ generateToken, verifyJWT,}
+export default{ generateToken, verifyJWT,makePayment}
