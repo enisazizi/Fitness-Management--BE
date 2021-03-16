@@ -21,6 +21,15 @@ const logout = async (req:authReq, res:Response, next:NextFunction) => {
 	}
 };
 
+const clientLogin = async(req:Request, res:Response, next:NextFunction)=>{
+	try {
+		const {username,password} = req.body
+		
+	} catch (error) {
+		next(error)
+	}
+}
+
 const login = async (req:Request, res:Response, next:NextFunction) => {
 	try {
 		const { email, password } = req.body;

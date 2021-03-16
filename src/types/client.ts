@@ -16,7 +16,7 @@ export interface Client {
 export interface ClientDoc extends Document{
     _id: string;
     name: string;
-    accessToken:Array<String>;
+    accessToken:string;
     username:string;
     email: string;
     company_id:string;

@@ -19,14 +19,18 @@ const newClient = async (req: Request,res:Response,next:NextFunction)=>{
 
           const {_id} = await newClient.save()
           const token = makeUserPayment.makePayment(_id,payload)
-          const addTokenPayment = await clientModel.findByIdAndUpdate(
-              _id,
-              {$set:{
-                accessToken:payload,
-              },
-            }
-          )
-          res.status(201).send(_id)
+          if(token){
+
+              const addTokenPayment = await clientModel.findByIdAndUpdate(
+                  _id,
+                  {$set:{
+                    accessToken:token,
+                  },
+                }
+              )
+             
+              res.status(201).send(_id)
+          }
   
     } catch (error) {
         console.log("catch error")
@@ -131,14 +135,13 @@ const removeProductFromClientCart = async(req:Request,res:Response,next:NextFunc
                         let client = await clientModel.findOne({_id:req.params.clientId})
                         if(client !==undefined && client !==null){
                          
-                            await clientModel.removeFromCart(req.params.clientId, correctProduct);
+                             clientModel.removeFromCart(req.params.clientId, correctProduct);
                             res.send(" Product deleted from cart");
                         }else{
                             throw new Error("Client is undefined")
                         }
                       
-                    //    await client?.save()
-                    //    res.status(204).send(client)
+                  
                       }
                       
                     
