@@ -23,10 +23,10 @@ const newClient = async (req: Request,res:Response,next:NextFunction)=>{
 
               const addTokenPayment = await clientModel.findByIdAndUpdate(
                   _id,
-                  {$set:{
+                  {
                     accessToken:token,
-                  },
-                }
+                 
+                },
               )
              
               res.status(201).send(_id)
@@ -162,6 +162,25 @@ const cartTotal = async(req:Request,res:Response,next:NextFunction)=>{
         next(error)
     }
 }
+
+const bodyWorkOut = async(req:Request,res:Response,next:NextFunction)=>{
+    try {
+        console.log(...req.body.bodyWork)
+        
+        const editClientInfo = await clientModel.findByIdAndUpdate(
+            req.params.id,
+            {
+              $push:{bodyWork:req.body.bodyWork}
+            },
+            { new:true }
+        )
+        res.send(editClientInfo)
+
+       
+    } catch (error) {
+        next(error)
+    }
+}
 export default {
     newClient,
     getClients,
@@ -171,4 +190,5 @@ export default {
     addProductToClientCart,
     removeProductFromClientCart,
     cartTotal,
+    bodyWorkOut
   };

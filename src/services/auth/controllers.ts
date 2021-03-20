@@ -2,8 +2,9 @@ import { Request, Response, NextFunction } from "express";
 import { errorMessage } from "../../types/errors";
 import {authReq} from '../../types/general'
 import {companyModel} from "../company/schema"
+import {clientModel} from "../clients/schema"
 import jwtHandler  from './jwt';
-
+import verify from "./jwt"
 
 const logout = async (req:authReq, res:Response, next:NextFunction) => {
 	try {
@@ -24,7 +25,33 @@ const logout = async (req:authReq, res:Response, next:NextFunction) => {
 const clientLogin = async(req:Request, res:Response, next:NextFunction)=>{
 	try {
 		const {username,password} = req.body
+	
+		const client = await clientModel.findByCred(username,password)
+		if (!client){
+			return next(new Error("Invalid Credentials"));
+		} else{
+			console.log("its clinet here",client)
+			let token =  client.accessToken
+			console.log("TOKEN",token)
+			const decoded = await verify.verifyJWT(token);
+			if(decoded?.hasOwnProperty("_id")){
+				console.log("decoded",decoded._id)
+			}
 		
+			const myClient = await clientModel.findOne({
+				_id: decoded._id,
+			}).select({password:0,__v:0})
+			if (!myClient) {
+				console.log("juhuuu")
+				throw new Error( "Unauthorized");
+			}
+	
+			res.send("OKEJ")
+	
+			next();
+
+		}
+
 	} catch (error) {
 		next(error)
 	}
@@ -48,4 +75,5 @@ const login = async (req:Request, res:Response, next:NextFunction) => {
 export default {
     login,
     logout,
+	clientLogin,
   };

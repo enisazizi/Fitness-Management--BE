@@ -14,6 +14,7 @@ const clientSchema = new Schema ({
   company_id:{type:Schema.Types.ObjectId,ref:"Company"},
   password: { type: String,  },
   username: { type: String ,unique:true},
+  bodyWork:[String],
   accessToken:{type:String},
   cart: [
     {
@@ -30,7 +31,7 @@ const clientSchema = new Schema ({
 
 clientSchema.pre<ClientDoc>("save",async function (next){
     if(this.password != undefined){
-        const validation = await clientModel.findOne({email:this.email})
+        const validation = await clientModel.findOne({username:this.username})
 
         if (!validation) {
             const checkPw = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\s).*$/; //Check if pw has a number,lowercase and uppercase
@@ -40,7 +41,7 @@ clientSchema.pre<ClientDoc>("save",async function (next){
             if (validPw) {
               const encryptedPassword = await bcrypt.hash(this.password, 8);
               this.password = encryptedPassword;
-              this.email = this.email.toLowerCase();
+              this.username = this.username.toLowerCase();
               next();
             } else {
               const err = new Error();
@@ -49,7 +50,7 @@ clientSchema.pre<ClientDoc>("save",async function (next){
             }
           } else {
             const err = new Error();
-            err.message = "EMAIL ALREADY EXISTS";
+            err.message = "USERNAME ALREADY EXISTS";
             next(err);
           }
         } else {
@@ -130,6 +131,7 @@ clientSchema.statics.findByCred = async function (
                 name,
                 password,
                 username,
+                accessToken,
                 email,
                 _id,
                 image,
@@ -138,6 +140,7 @@ clientSchema.statics.findByCred = async function (
                 name,
                 username,
                 email,
+                accessToken,
                 _id,
                 image,
             })

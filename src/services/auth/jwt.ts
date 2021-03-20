@@ -1,4 +1,5 @@
 import jwt from 'jsonwebtoken'
+
 import {DecodedVerifyOpt} from "../../types/general"
 import {companyModel} from "../../services/company/schema"
 import {CompanyDoc} from "../../types/company"

@@ -9,6 +9,8 @@ export interface Client {
     company_id:string;
     image?: string;
     product: string;
+    bodyWork:any;
+    accessToken:string;
     cart:Array<any>
     
 }
@@ -23,6 +25,7 @@ export interface ClientDoc extends Document{
     password?: string;
     image?: string;
     product: string;
+    bodyWork:any;
    cart:Array<any>
 }
 export type ClientDocument = Model<ClientDoc>
@@ -30,7 +33,7 @@ export type ClientDocument = Model<ClientDoc>
 export interface ClientModel extends ClientDocument{
     findByCred(
         this: ClientDocument,
-        email: string,
+        username: string,
         password: string
       ): Promise<Client | undefined>;
 }
