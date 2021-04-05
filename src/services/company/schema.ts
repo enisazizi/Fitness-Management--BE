@@ -14,8 +14,8 @@ const companySchema = new Schema({
   username: { type: String, required: true },
   image: String,
   company_id:String,
-  business_id: { type: String, required: true },
-  license_id: { type: String, required: true },
+  business_id: { type: String},
+  license_id: { type: String},
 })
 
 companySchema.pre<CompanyDoc>("save", async function (next) {

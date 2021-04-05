@@ -10,7 +10,8 @@ import bcrypt from "bcrypt"
 
 const clientSchema = new Schema ({
     name: { type: String, required: true },
-  email: { type: String, required: true, unique: true },
+    surname: { type: String },
+  email: { type: String, unique: true },
   company_id:{type:Schema.Types.ObjectId,ref:"Company"},
   password: { type: String,  },
   username: { type: String ,unique:true},

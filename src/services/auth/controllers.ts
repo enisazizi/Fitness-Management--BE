@@ -46,7 +46,8 @@ const clientLogin = async(req:Request, res:Response, next:NextFunction)=>{
 				throw new Error( "Unauthorized");
 			}
 	
-			res.send("OKEJ")
+			res.cookie("token", token, { httpOnly: true });
+		res.status(200).send(token);
 	
 			next();
 
