@@ -3,8 +3,6 @@ import { Response, NextFunction } from "express";
 import { authReq as Request } from "../../types/general";
 import { errorMessage } from "../../types/errors";
 
-//errorMessage pranon nje string "Mesazhi i errorit" dhe numer "status code"
-
 const newCompany = async (req: Request, res: Response, nex: NextFunction) => {
   try {
     const newCompany = new companyModel({
@@ -13,13 +11,15 @@ const newCompany = async (req: Request, res: Response, nex: NextFunction) => {
     const { _id } = await newCompany.save();
     res.status(201).send(_id);
   } catch (error) {
-    nex(new errorMessage(error.message,404));
+    nex(new errorMessage(error.message, 500));
   }
 };
+
 const getCompany = async (req: Request, res: Response, nex: NextFunction) => {
   try {
+    if (!req.company?.id) return;
     const company = await companyModel
-      .findById(req.params.id)
+      .findById(req.company?._id)
       .select({ password: 0, __v: 0 });
     res.status(200).send(company);
   } catch (error) {
@@ -43,21 +43,25 @@ const getAllCompanies = async (
 async function editCompany(req: Request, res: Response, nex: NextFunction) {
   try {
     delete req.body.password;
-    let client = await companyModel.findByIdAndUpdate(req.body._id, req.body);
-    res.status(200).send(client);
+    let company = await companyModel.findByIdAndUpdate(
+      req.company?._id,
+      req.body
+    );
+    const update = { updated: req.body };
+    res.status(200).send(update);
   } catch (error) {
     nex(new errorMessage(error.message, 404));
   }
 }
 async function deleteCompany(req: Request, res: Response, nex: NextFunction) {
-  if (req.params.id)
-    try {
-      let client = await companyModel.findByIdAndDelete(req.params.id);
-      res.status(200).send(client);
-    } catch (error) {
-      console.log(error);
-      nex(new errorMessage(error.message, 400));
-    }
+  if (!req.company?._id) return;
+  try {
+    let company = await companyModel.findByIdAndDelete(req.params.id);
+    res.status(200).send(company);
+  } catch (error) {
+    console.log(error);
+    nex(new errorMessage(error.message, 400));
+  }
 }
 
 export default {

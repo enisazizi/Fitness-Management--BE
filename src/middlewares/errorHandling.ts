@@ -1,57 +1,59 @@
-import {Request,Response,NextFunction, ErrorRequestHandler} from "express"
-const badRequestHandler = (err:any, req:Request, res:Response, next:NextFunction) => {
-	if (err.httpStatusCode === 400) {
+import {Request,Response,NextFunction,Application} from "express"
+import {errorMessage as Error} from '../types/errors'
+
+const badRequestHandler = (err:Error, req:Request, res:Response, next:NextFunction) => {
+	if (err.httpStatus === 400) {
 		res.status(400).json({
 			success: false,
-			errors: err.message || "Bad Request",
+			errors: err.msg || "Bad Request",
 		});
 	}
 	next(err);
 };
 
-const forbiddenError = (err:any, req:Request, res:Response, next:NextFunction) => {
-	if (err.httpStatusCode === 403) {
+const forbiddenError = (err:Error, req:Request, res:Response, next:NextFunction) => {
+	if (err.httpStatus === 403) {
 		res.status(400).json({
 			success: false,
-			errors: err.message || "Forbidden",
+			errors: err.msg || "Forbidden",
 		});
 	}
 	next(err);
 };
 
-const notFoundHandler = (err:any, req:Request, res:Response, next:NextFunction) => {
-	if (err.httpStatusCode === 404) {
+const notFoundHandler = (err:Error, req:Request, res:Response, next:NextFunction) => {
+	if (err.httpStatus === 404) {
 		res.status(404).json({
 			success: false,
-			errors: err.message || "Not Found",
+			errors: err.msg || "Not Found",
 		});
 	}
 	next(err);
 };
 
-const unauthorizedError = (err:any, req:Request, res:Response, next:NextFunction) => {
-	if (err.httpStatusCode === 401) {
+const unauthorizedError = (err:Error, req:Request, res:Response, next:NextFunction) => {
+	if (err.httpStatus === 401) {
 		res.status(401).json({
 			success: false,
-			errors: err.message || "Unauthorized",
+			errors: err.msg || "Unauthorized",
 		});
 	}
 	next(err);
 };
 
-const genericErrorHandler =(err:any, req:Request, res:Response, next:NextFunction) => {
+const genericErrorHandler = (err:Error, req:Request, res:Response, next:NextFunction) => {
 	if (!res.headersSent) {
-		res.status(err.httpStatusCode || 500).json({
+		res.status(err.httpStatus || 500).json({
 			success: false,
-			errors: err.message || "Internal Server Error",
+			errors: err.msg || "Internal Server Error",
 		});
 	}
 };
 
-module.exports = (app: any) => {
-	app.use(badRequestHandler);
-	app.use(notFoundHandler);
-	app.use(forbiddenError);
-	app.use(unauthorizedError);
-	app.use(genericErrorHandler);
+module.exports = (server:Application) => {
+	server.use(badRequestHandler);
+	server.use(notFoundHandler);
+	server.use(forbiddenError);
+	server.use(unauthorizedError);
+	server.use(genericErrorHandler);
 };

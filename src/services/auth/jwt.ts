@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken'
 import {DecodedVerifyOpt} from "../../types/general"
 import {companyModel} from "../../services/company/schema"
 import {CompanyDoc} from "../../types/company"
-const { JWT_SECRET } = process.env;
+const JWT_SECRET = '12341234123'
 
 interface dec {
 	_id:string;

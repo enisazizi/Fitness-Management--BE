@@ -1,36 +1,38 @@
-import { Schema, model } from "mongoose";
-import {
-  Company,
-  CompanyDoc,
-  CompanyDocument,
-  CompanyModel,
-} from "../../types/company";
+import { Schema, model, HookNextFunction } from "mongoose";
+import { CompanyDoc, CompanyDocument, CompanyModel } from "../../types/company";
 import bcrypt from "bcrypt";
 
 const companySchema = new Schema({
   name: { type: String, required: true },
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
-  username: { type: String, required: true },
+  username: { type: String, required: true, unique: true },
   image: String,
-  company_id:String,
-  business_id: { type: String},
-  license_id: { type: String},
-})
+  license_id: String,
+});
 
-companySchema.pre<CompanyDoc>("save", async function (next) {
-  if (this.password != undefined) {
-    const validation = await companyModel.findOne({ email: this.email });
+companySchema.pre(
+  "save",
+  async function (this: CompanyDoc, next: HookNextFunction) {
+    if (this.password != undefined) {
+      const validation = await companyModel.findOne({ email: this.email });
 
-    if (!validation) {
-      const checkPw = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\s).*$/; //Check if pw has a number,lowercase and uppercase
+      if (validation) {
+        const err = new Error();
+        err.message = "EMAIL ALREADY EXISTS";
+        next(err);
+        return;
+      }
+      
+      
+      const checkPw = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\s).*$/;
+      
       const validPw = this.password.match(checkPw);
-      console.log(validPw);
 
       if (validPw) {
-        const encryptedPassword = await bcrypt.hash(this.password, 8);
+        const encryptedPassword = await bcrypt.hash(this.password,2);
         this.password = encryptedPassword;
-        this.email = this.email.toLowerCase();
+        this.email.toLowerCase();
         next();
       } else {
         const err = new Error();
@@ -39,15 +41,11 @@ companySchema.pre<CompanyDoc>("save", async function (next) {
       }
     } else {
       const err = new Error();
-      err.message = "EMAIL ALREADY EXISTS";
+      err.message = "You must provide a password";
       next(err);
     }
-  } else {
-    const err = new Error();
-    err.message = "PASSWORD MUST HAVE MORE THAN 8 CHARACTERS";
-    next(err);
   }
-});
+);
 
 companySchema.statics.findByCred = async function (
   this: CompanyDocument,
