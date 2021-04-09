@@ -12,7 +12,7 @@ productRouter.put("/:id",validateTokens.validateToken,cloudinaryMulter.single("p
 
 productRouter.post("/",validateTokens.validateToken,controller.newProduct)
 
-productRouter.delete("/:id")
+productRouter.delete("/:id",validateTokens.validateToken,controller.deleteProduct)
 
 productRouter.post("/:id/image/upload",cloudinaryMulter.single("product"),validateTokens.validateToken,controller.newProdPhoto)
 

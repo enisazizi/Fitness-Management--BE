@@ -93,10 +93,19 @@ const editProduct = async(req: Request,res:Response,next:NextFunction)=>{
 		next(error);
 	}
 }
+const deleteProduct  = async(req: Request,res:Response,next:NextFunction)=>{
+    try {
+        const deleteProd = await productModel.findByIdAndDelete(req.params.id)
+        res.status(204).send("deleted")
+    } catch (error) {
+        next(error)
+    }
+}
 export default {
     newProduct,
     newProdPhoto,
     getProduct,
     getAllProdcts,
     editProduct,
+    deleteProduct,
 }
