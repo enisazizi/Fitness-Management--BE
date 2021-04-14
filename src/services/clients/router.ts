@@ -4,7 +4,8 @@ import token from "../../middlewares/validateTokens";
 const clientRouter = Router();
 
 //get all company clients
-clientRouter.get("/all", token.validateClient, controller.getClients);
+clientRouter.get("/all", token.validateToken
+, controller.getClients);
 //get a specific client
 clientRouter.get("/:id", token.validateClient, controller.getClient);
 //new client

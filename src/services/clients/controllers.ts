@@ -5,17 +5,22 @@ import { FilterProducts } from "../../types/product";
 import jwt from "../auth/jwt";
 import { productModel } from "../products/schema";
 
+
+
+
 const newClient = async (req: Request, res: Response, next: NextFunction) => {
   try {
+
     const companyId = req.company?._id;
-    const payload = req.body;
+    console.log("company",req.body)
+    const payload = req.body.payload;
     const newClient = new clientModel({
       ...req.body,
       company_id: companyId,
     });
 
     const { _id } = await newClient.save();
-    const token = jwt.makePayment(_id, payload.time);
+    const token = jwt.makePayment(_id, payload);
     if (token) {
       const addTokenPayment = await clientModel.findByIdAndUpdate(_id, {
         accessToken: token,
