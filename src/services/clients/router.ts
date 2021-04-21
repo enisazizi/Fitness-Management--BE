@@ -26,6 +26,7 @@ clientRouter.delete(
   token.validateClient,
   controller.removeProductFromClientCart
 );
+clientRouter.post("/:id",token.validateToken,controller.newPayment)
 //get total price ?!??!?!
 clientRouter.get("/:id/total", token.validateClient, controller.cartTotal);
 

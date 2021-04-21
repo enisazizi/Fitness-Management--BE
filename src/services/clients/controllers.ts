@@ -6,7 +6,22 @@ import jwt from "../auth/jwt";
 import { productModel } from "../products/schema";
 
 
-
+const newPayment = async(req: Request, res: Response, next: NextFunction)=>{
+  try {
+    
+    console.log("hehe",req.body.payload)
+    const token = jwt.makePayment(req.params.id,req.body.payload)
+    if(token){
+      const addTokenPayment = await clientModel.findByIdAndUpdate(req.params.id, {
+        accessToken: token,
+      });
+      console.log(addTokenPayment,"heyy")
+      res.status(201).send("Payment is done");
+    }
+  } catch (error) {
+    next(error)
+  }
+}
 
 const newClient = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -183,4 +198,5 @@ export default {
   removeProductFromClientCart,
   cartTotal,
   bodyWorkOut,
+  newPayment,
 };
