@@ -12,7 +12,7 @@ const dbOptions = {
 mongoose
   .connect(
     process.env.DATABASE ||
-      "mongodb://localhost:27017/fitness-management-Backend",
+      "mongodb+srv://enith:<password>@cluster0.hcnlo.mongodb.net/testBe",
     dbOptions
   )
   .then((e) => {
