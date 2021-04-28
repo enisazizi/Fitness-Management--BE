@@ -7,8 +7,8 @@
     "dev": "nodemon -r dotenv/config ./src/server.ts",
     "build": "tsc -p .",
     "start": "node /dist/src/app.js",
-    "test": "env-cmd -f ./config/test.env jest",
-    "heroku-postbuild": "cd react-ui/ && npm install && npm install    --only=dev --no-shrinkwrap && npm run build"
+    "test": "env-cmd -f ./config/test.env jest"
+    // "heroku-postbuild": "cd react-ui/ && npm install && npm install    --only=dev --no-shrinkwrap && npm run build"
   },
   
   "keywords": [
