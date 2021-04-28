@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "nodemon -r dotenv/config ./src/server.ts",
     "build": "tsc -p .",
-    "start": "node ./src/server.ts",
+    "start": "node dist/server.js",
     "test": "env-cmd -f ./config/test.env jest"
   },
   "keywords": [
