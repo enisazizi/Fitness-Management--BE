@@ -1,0 +1,21 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+const express = require("express");
+const services = express();
+const router_1 = __importDefault(require("./auth/router"));
+const router_2 = __importDefault(require("./company/router"));
+const router_3 = __importDefault(require("./clients/router"));
+const router_4 = __importDefault(require("./clientActivity/router"));
+const router_5 = __importDefault(require("./products/router"));
+const router_6 = __importDefault(require("./cart/router"));
+const router_7 = __importDefault(require("./payments/router"));
+services.use("/company", router_2.default);
+services.use("/client", router_3.default);
+services.use("/auth", router_1.default);
+services.use("/product", router_5.default);
+services.use("/activity", router_4.default);
+services.use("/cart", router_6.default);
+services.use("/payment", router_7.default);
+module.exports = services;
