@@ -12,7 +12,7 @@ const dbOptions = {
 mongoose
   .connect(
     process.env.DATABASE ||
-      "mongodb+srv://enith:<password>@cluster0.hcnlo.mongodb.net/testBe",
+      "mongodb+srv://enith:123123@cluster0.hcnlo.mongodb.net/testBe",
     dbOptions
   )
   .then((e) => {
