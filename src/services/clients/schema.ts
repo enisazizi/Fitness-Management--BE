@@ -9,7 +9,8 @@ import bcrypt from "bcrypt";
 
 const clientSchema = new Schema({
   name: { type: String, required: true },
-  email: { type: String, required: true, unique: true },
+  surname: { type: String, required: true },
+  email: { type: String },
   company_id: { type: Schema.Types.ObjectId, ref: "Company", required: true },
   password: { type: String },
   username: { type: String, unique: true },
@@ -32,8 +33,6 @@ clientSchema.pre("save", async function (this: ClientDoc, next: any) {
     if (!validation) {
       const checkPw = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\s).*$/; //Check if pw has a number,lowercase and uppercase
       const validPw = this.password.match(checkPw);
-      console.log(validPw);
-
       if (validPw) {
         const encryptedPassword = await bcrypt.hash(this.password, 8);
         this.password = encryptedPassword;
@@ -64,32 +63,16 @@ clientSchema.statics.findByCred = async function (
 ) {
   try {
     let Client = await this.findOne({ username });
-    if (!Client?.password) throw new Error("Client not found !");
-
+    if (!Client?.password) return;
     const doesMatch = await bcrypt.compare(password, Client.password);
     if (!doesMatch) {
       const err = new Error();
       err.message = "Unable to Login,check Crendetials";
       throw err;
-    } else {
-      const {
-        name,
-        password,
-        username,
-        accessToken,
-        email,
-        _id,
-        image,
-      } = Client;
-      return Object.freeze({
-        name,
-        username,
-        email,
-        accessToken,
-        _id,
-        image,
-      });
     }
+    delete Client.password;
+
+    return Client;
   } catch (error) {
     error.mesage = "Exception while finding client";
     throw error;
@@ -98,73 +81,7 @@ clientSchema.statics.findByCred = async function (
 
 //CART MANOVER
 
-clientSchema.statics.findProductInCart = async function (
-  this: ClientDocument,
-  id: string,
-  productId: string
-) {
-  const isProduct = await this.findOne({
-    _id: id,
-    "cart.product": productId,
-  });
-  console.log("Isproduct func is returning :", isProduct);
-  return isProduct;
-};
 
-clientSchema.statics.incrementCartQuantity = async function (
-  this: ClientDocument,
-  id: string,
-  productdId: string,
-  quantity: number
-) {
-  console.log(quantity);
-  const product = await this.findOneAndUpdate(
-    {
-      _id: id,
-      "cart.product": productdId,
-    },
-    { $inc: { "cart.$.quantity": quantity } }
-  );
-  // console.log("qitu duhet me hi",product)
-};
-
-clientSchema.statics.addProductToCart = async function (
-  id: string,
-  product: any
-) {
-  await clientModel.findOneAndUpdate(
-    { _id: id },
-    { $addToSet: { cart: { product: product } } }
-  );
-};
-clientSchema.statics.removeFromCart = async function (
-  id: string,
-  product: any
-) {
-  console.log(product.product);
-  await clientModel.findOneAndUpdate(
-    { _id: id },
-    { $pull: { cart: { product: product.product } } }
-  );
-};
-clientSchema.statics.calculateCartTotal = async function (id: string) {
-  const whatever = await clientModel.findById(id).populate([
-    {
-      path: "cart.product",
-    },
-  ]);
-  if (whatever) {
-    console.log(whatever, "-----");
-    const total = whatever.cart
-      .map(
-        (product) =>
-          parseInt(product.quantity) * parseInt(product.product.price)
-      )
-      .reduce((acc, el) => acc + el, 0);
-    console.log(total);
-    return whatever;
-  }
-};
 
 export const clientModel = model<ClientDoc, ClientModel>(
   "Client",

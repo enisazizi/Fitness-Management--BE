@@ -1,8 +1,10 @@
 import express = require("express");
-const app = express();
 import services from "./services";
 import cookieParser = require("cookie-parser");
 import cors from "cors"
+const app = express();
+app.set("trust proxy", 1);
+app.enable("trust proxy");
 const whitelist = [process.env.REDIRECT_URL];
 
 const corsOptions = {

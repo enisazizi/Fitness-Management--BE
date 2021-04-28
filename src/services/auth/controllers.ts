@@ -19,6 +19,20 @@ const logout = async (req: authReq, res: Response, next: NextFunction) => {
     next(error);
   }
 };
+const Clientlogout = async (req: authReq, res: Response, next: NextFunction) => {
+  try {
+    if (req.client !== undefined) {
+      await req.client.save();
+      res.clearCookie("token");
+      res.cookie("isAuthCompany", false);
+      // res.redirect(process.env.REDIRECT_LOGIN_URL);
+      res.send("OK");
+    }
+  } catch (error) {
+    console.log("logout error: ", error);
+    next(error);
+  }
+};
 
 const clientLogin = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -27,7 +41,7 @@ const clientLogin = async (req: Request, res: Response, next: NextFunction) => {
     const client = await clientModel.findByCred(username, password);
     if (!client?._id) return next(new errorMessage("Invalid Credentials", 500));
     let token = jwt.generateToken(client._id);
-    res.status(200).cookie("token", token).send(token);
+    res.status(200).cookie("token", token, { httpOnly: true,sameSite:'none',secure:true }).send("okej")
   } catch (error) {
     console.log("error", error.message);
     next(new errorMessage(error.message, 500));
@@ -40,7 +54,7 @@ const login = async (req: Request, res: Response, next: NextFunction) => {
     const company = await companyModel.findByCred(email, password);
     if (!company) return next(new Error("Invalid Credentials"));
     const token = jwt.generateToken(company._id);
-    res.cookie("token", token, { httpOnly: true });
+    res.cookie("token", token, { httpOnly: true,sameSite:'none',secure:true });
     res.cookie("isAuthcompany", true);
     res.status(200).send(token);
   } catch (error) {
@@ -52,4 +66,5 @@ export default {
   login,
   logout,
   clientLogin,
+  Clientlogout,
 };

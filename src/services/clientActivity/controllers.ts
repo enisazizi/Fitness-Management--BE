@@ -25,7 +25,11 @@ const checkIn = async (req: Request, res: Response, nex: NextFunction) => {
 
 const checkOut = async (req: Request, res: Response, nex: NextFunction) => {
   try {
-    const endActivity = await activityModel.findByIdAndUpdate(req.params.id, {
+    if (!req.client) return;
+    // const activity = await activityModel.find({ clientId: req.client._id });
+    let activity = await activityModel.find({clientId:req.client._id});
+     activity = activity.filter((elem)=> !elem.checkOut)
+    const endActivity = await activityModel.findByIdAndUpdate(activity[0]._id, {
       checkOut: new Date(),
     });
 
@@ -42,12 +46,34 @@ const clientActivity = async (
 ) => {
   try {
     if (!req.client) return;
-    const activity = await activityModel.find({ clientId: req.client._id });
+    // const activity = await activityModel.find({ clientId: req.client._id });
+    let activity = await activityModel.find();
+    activity = activity.filter((elem)=> !elem.checkOut)
+    
+  
     res.status(200).send(activity);
   } catch (error) {
     nex(new errorMessage("something went wrong", 500));
   }
 };
+const SingleclientActivity = async (
+  req: Request,
+  res: Response,
+  nex: NextFunction
+) => {
+  try {
+    if (!req.client) return;
+    // const activity = await activityModel.find({ clientId: req.client._id });
+    let activity = await activityModel.find({clientId:req.client._id});
+  activity = activity.filter((elem)=> elem.checkOut)
+    
+  
+    res.status(200).send(activity);
+  } catch (error) {
+    nex(new errorMessage("something went wrong", 500));
+  }
+};
+
 const companyActivity = async (
   req: Request,
   res: Response,
@@ -62,4 +88,5 @@ const companyActivity = async (
   }
 };
 
-export const controller = { checkIn, checkOut };
+
+export const controller = { checkIn, checkOut ,clientActivity,SingleclientActivity};

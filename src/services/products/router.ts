@@ -4,7 +4,7 @@ import cloudinaryMulter from "../../middlewares/cloudinary"
 import controller from "./controllers"
 const productRouter = Router()
 
-productRouter.get("/all",validateTokens.validateToken,controller.getAllProdcts)
+productRouter.get("/all",controller.getAllProdcts)
 
 productRouter.get("/:id",validateTokens.validateToken,controller.getProduct)
 
