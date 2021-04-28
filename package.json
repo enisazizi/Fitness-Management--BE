@@ -2,7 +2,7 @@
   "name": "gym-menagement-app",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "dist/server.js",
   "scripts": {
     "dev": "nodemon -r dotenv/config ./src/server.ts",
     "build": "tsc -p .",
